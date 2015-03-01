@@ -7,6 +7,14 @@ var
 
 function Person(name, gender) {
 
+    var personSecret = 'top secret information';
+
+    this.getInfo = function () {
+        var personInfo = this.name + ' ';
+        if (personSecret) personInfo += personSecret;
+        return personInfo;
+    };
+
     this.name = name;
     Object.defineProperty(this, 'gender', {
         value: gender
@@ -19,7 +27,7 @@ Person.prototype = {
     name: null,
     gender: null,
     constructor: Person,
-    getFirstName: function() {
+    getFirstName: function () {
         if (this.name) {
             var nameArr = this.name.toString().split(' ');
             return nameArr[0];
@@ -27,7 +35,7 @@ Person.prototype = {
             return '';
         }
     },
-    setFirstName: function(firstName) {
+    setFirstName: function (firstName) {
         if (this.name) {
             var nameArr = this.name.toString().split(' ');
             nameArr[0] = firstName;
@@ -36,7 +44,7 @@ Person.prototype = {
             this.name = firstName + ' ';
         }
     },
-    getLastName: function() {
+    getLastName: function () {
         if (this.name) {
             var nameArr = this.name.toString().split(' ');
             return nameArr[1];
@@ -44,7 +52,7 @@ Person.prototype = {
             return '';
         }
     },
-    setLastName: function(lastName) {
+    setLastName: function (lastName) {
         if (this.name) {
             var nameArr = this.name.toString().split(' ');
             nameArr[1] = lastName;
@@ -52,6 +60,9 @@ Person.prototype = {
         } else {
             this.name = " " + lastName;
         }
+    },
+    greet: function () {
+        console.log('My name is ' + this.name);
     }
 
 
@@ -61,8 +72,15 @@ Person.prototype = {
 function Man(name) {
 
     Person.apply(this, [name, 'male']);
-
     this.constructor = Man;
+
+    var parentGreet = this.greet;
+    this.greet = function () {
+        console.log('Hi dudes');
+        parentGreet.apply(this);
+    };
+
+
     Object.defineProperty(this, "sex", {
         get: function () {
             return this.gender;
@@ -91,17 +109,25 @@ function Man(name) {
         }
     });
 
+
+
 }
 
-Man.prototype = {};//Object.create(Person.prototype);
-$.extend(Man.prototype, new Person());
+Man.prototype = {};
+$.extend(Man.prototype, Person.prototype);
 
 
 function Woman(name) {
 
     Person.apply(this, [name, 'female']);
-
     this.constructor = Woman;
+
+    var parentGreet = this.greet;
+    this.greet = function () {
+        console.log('Hello everyone');
+        parentGreet.apply(this);
+    };
+
     Object.defineProperty(this, "sex", {
         get: function () {
             return this.gender;
@@ -130,12 +156,25 @@ function Woman(name) {
         }
     });
 
+
+
 }
 
+Woman.prototype = {};
+$.extend(Woman.prototype, Person.prototype);
+console.log(Woman.prototype.greet);
 
-var testPerson = new Person();
 
 
+console.log('====INHERITANCE====');
+console.log('=======PRESON======');
+var testPerson = new Person('Subject Zero', 'female');
+console.log(testPerson.getLastName(), testPerson.getFirstName());
+console.log(testPerson.name, testPerson.gender);
+testPerson.gender = 'dfgbaerh';
+console.log(testPerson.name, testPerson.gender);
+
+console.log('========MAN========');
 var ivan = new Man('Ivan Petrov');
 console.log(ivan.getLastName(), ivan.getFirstName());
 console.log(ivan.name, ivan.gender);
@@ -154,18 +193,28 @@ try {
     console.log(e);
 }
 
-
 console.log(ivan.name, ivan.gender);
 
-var janna = new Man('Janna Petrova');
+console.log('========WOMAN======');
+var janna = new Woman('Janna Petrova');
 console.log(janna.getLastName(), janna.getFirstName());
 console.log(janna.name, janna.gender);
-ivan.gender = 'dfgbaerh';
+janna.gender = 'dfgbaerh';
 console.log(janna.name, janna.gender);
 
-var olga = new Man('Olga Sidorova');
+var olga = new Woman('Olga Sidorova');
 console.log(olga.getLastName(), olga.getFirstName());
 console.log(olga.name, olga.gender);
 olga.name = 'Valentina';
 console.log(olga.name, olga.gender);
 console.log(janna.name, janna.gender);
+
+console.log('===ENCAPSULATION===');
+console.log(testPerson.getInfo());
+console.log(ivan.getInfo());
+console.log(janna.getInfo());
+
+console.log('====POLYMORPHISM====');
+testPerson.greet();
+ivan.greet();
+janna.greet();
