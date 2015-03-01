@@ -7,10 +7,6 @@ var
 
 function Person(name, gender) {
 
-    if (!(this instanceof Person)) {
-        throw PERSON_IS_CONSTRUCTOR_EXEPTION
-    }
-
     this.name = name;
     Object.defineProperty(this, 'gender', {
         value: gender
@@ -20,25 +16,42 @@ function Person(name, gender) {
 
 Person.prototype = {
 
+    name: null,
+    gender: null,
     constructor: Person,
-
-    get firstName() {
-        var nameArr = this.name.toString().split(' ');
-        return nameArr[0];
+    getFirstName: function() {
+        if (this.name) {
+            var nameArr = this.name.toString().split(' ');
+            return nameArr[0];
+        } else {
+            return '';
+        }
     },
-    set firstName(firstName) {
-        var nameArr = this.name.toString().split(' ');
-        nameArr[0] = firstName;
-        this.name = nameArr.join(' ');
+    setFirstName: function(firstName) {
+        if (this.name) {
+            var nameArr = this.name.toString().split(' ');
+            nameArr[0] = firstName;
+            this.name = nameArr.join(' ');
+        } else {
+            this.name = firstName + ' ';
+        }
     },
-    get lastName() {
-        var nameArr = this.name.toString().split(' ');
-        return nameArr[1];
+    getLastName: function() {
+        if (this.name) {
+            var nameArr = this.name.toString().split(' ');
+            return nameArr[1];
+        } else {
+            return '';
+        }
     },
-    set lastName(lastName) {
-        var nameArr = this.name.toString().split(' ');
-        nameArr[1] = lastName;
-        this.name = nameArr.join(' ');
+    setLastName: function(lastName) {
+        if (this.name) {
+            var nameArr = this.name.toString().split(' ');
+            nameArr[1] = lastName;
+            this.name = nameArr.join(' ');
+        } else {
+            this.name = " " + lastName;
+        }
     }
 
 
@@ -60,24 +73,29 @@ function Man(name) {
     });
     Object.defineProperty(this, "surName", {
         get: function () {
-            var nameArr = this.name.toString().split(' ');
-            return nameArr[1];
+            if (this.name) {
+                var nameArr = this.name.toString().split(' ');
+                return nameArr[1];
+            } else {
+                return '';
+            }
         },
         set: function (name) {
-            var nameArr = this.name.toString().split(' ');
-            nameArr[1] = name;
-            this.name = nameArr.join(' ');
+            if (this.name) {
+                var nameArr = this.name.toString().split(' ');
+                nameArr[1] = name;
+                this.name = nameArr.join(' ');
+            } else {
+                this.name = " " + name;
+            }
         }
     });
 
 }
-Man.prototype = Object.create(Person.prototype);
-Man.prototype.getName = function () {
-    return this.name;
-};
-Man.prototype.setName = function (n) {
-    this.name = n;
-};
+
+Man.prototype = {};//Object.create(Person.prototype);
+$.extend(Man.prototype, new Person());
+
 
 function Woman(name) {
 
@@ -94,35 +112,39 @@ function Woman(name) {
     });
     Object.defineProperty(this, "surName", {
         get: function () {
-            var nameArr = this.name.toString().split(' ');
-            return nameArr[1];
+            if (this.name) {
+                var nameArr = this.name.toString().split(' ');
+                return nameArr[1];
+            } else {
+                return '';
+            }
         },
         set: function (name) {
-            var nameArr = this.name.toString().split(' ');
-            nameArr[1] = name;
-            this.name = nameArr.join(' ');
+            if (this.name) {
+                var nameArr = this.name.toString().split(' ');
+                nameArr[1] = name;
+                this.name = nameArr.join(' ');
+            } else {
+                this.name = " " + name;
+            }
         }
     });
 
 }
-Woman.prototype = Object.create(Person.prototype);
-Woman.prototype.getName = function () {
-    return this.name;
-};
-Woman.prototype.setName = function (n) {
-    this.name = n;
-};
+
+
+var testPerson = new Person();
 
 
 var ivan = new Man('Ivan Petrov');
-console.log(ivan.lastName, ivan.firstName);
+console.log(ivan.getLastName(), ivan.getFirstName());
 console.log(ivan.name, ivan.gender);
 ivan.gender = 'dfgbaerh';
 console.log(ivan.name, ivan.gender);
 
 
 var peter = new Man('Petr Sidorov');
-console.log(peter.lastName, peter.firstName);
+console.log(peter.getLastName(), peter.getFirstName());
 console.log(peter.name, peter.gender);
 peter.firstName = 'Alexy';
 console.log(peter.name, peter.gender);
@@ -136,13 +158,13 @@ try {
 console.log(ivan.name, ivan.gender);
 
 var janna = new Man('Janna Petrova');
-console.log(janna.lastName, janna.firstName);
+console.log(janna.getLastName(), janna.getFirstName());
 console.log(janna.name, janna.gender);
 ivan.gender = 'dfgbaerh';
 console.log(janna.name, janna.gender);
 
 var olga = new Man('Olga Sidorova');
-console.log(olga.lastName, olga.firstName);
+console.log(olga.getLastName(), olga.getFirstName());
 console.log(olga.name, olga.gender);
 olga.name = 'Valentina';
 console.log(olga.name, olga.gender);
